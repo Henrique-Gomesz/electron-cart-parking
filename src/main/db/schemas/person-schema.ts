@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
+import { DocumentModel } from './model-interface'
 
-export type Person = {
+export interface Person extends DocumentModel {
   name: string
   document: string
   telephone: string
@@ -17,4 +18,4 @@ export const PersonSchema = new mongoose.Schema<Person>(
   { timestamps: true }
 )
 
-export const PersonModel = mongoose.model('person', PersonSchema)
+export const PersonModel = mongoose.model('Person', PersonSchema, 'person')

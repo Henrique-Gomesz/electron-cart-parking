@@ -1,4 +1,3 @@
-// person.repository.ts
 import { Model } from 'mongoose'
 import { Person } from '../schemas/person-schema'
 

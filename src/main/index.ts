@@ -1,12 +1,12 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import mongoose from 'mongoose'
-import { Person } from './db/schemas/person-schema'
+import { join } from 'path'
+import icon from '../../resources/icon.png?asset'
 import { PersonRepository } from './db/repositories/person-repository'
-import { PersonModel } from './db/schemas/person-schema'
-
+import { Person, PersonModel } from './db/schemas/person-schema'
+import {CartModel} from './db/schemas/cart-schema'
+import { CartRepository } from './db/repositories/cart-repository'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -46,10 +46,11 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   mongoose
     .connect('mongodb://127.0.0.1:27017/cart-park')
-    .then((connection) => {
+    .then(() => {
       console.log('Connected to MongoDB')
       electronApp.setAppUserModelId('com.electron')
       const personRepository = new PersonRepository(PersonModel)
+      const cartRepository = new CartRepository(CartModel)
       // Default open or close DevTools by F12 in development
       // and ignore CommandOrControl + R in production.
       // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -60,11 +61,11 @@ app.whenReady().then(() => {
       // IPC test
       ipcMain.on('ping', () => console.log('pong'))
 
-      ipcMain.on('create-person', async (event, list) => {
+      ipcMain.on('create-person', async (_event, list) => {
         const person = list[0] as Person
 
         const created = await personRepository.create(person)
-        
+        console.log(created.id)
       })
 
       createWindow()
