@@ -1,11 +1,6 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import mongoose from 'mongoose'
 
-mongoose
-  .connect('mongodb://127.0.0.1:27017/parking_database')
-  .then((connection) => console.log(connection))
-  .catch((error) => console.log(error))
 
 // Custom APIs for renderer
 const api = {}

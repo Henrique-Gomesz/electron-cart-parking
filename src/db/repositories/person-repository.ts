@@ -1,1 +1,0 @@
-import {PersonSchema} from '../schemas/person-schema'

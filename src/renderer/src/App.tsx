@@ -1,8 +1,8 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
-
+import  {Person} from "../../main/db/schemas/person-schema"
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ipcHandle = (): void => window.electron.ipcRenderer.send('create-person', [{name: "Test", document: "123", telephone: "123", active: true}]);
 
   return (
     <>
