@@ -1,32 +1,38 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
-import  {Person} from "../../main/db/schemas/person-schema"
+
+import { IpcRendererEvent } from 'electron'
+import { ListPerson } from './entities/person'
+import { useState } from 'react'
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('create-person', [{name: "Test", document: "123", telephone: "123", active: true}]);
+  const [personList, setPersonList] = useState<ListPerson[]>([])
+  const ipcHandle = (): void =>
+    window.electron.ipcRenderer.send('create-person', [
+      { name: 'Test', document: '123', telephone: '123', active: true }
+    ])
+
+  const ipcHandle2 = (): void => window.electron.ipcRenderer.send('list-person')
+
+  window.electron.ipcRenderer.on(
+    'list-person-reply',
+    (event: IpcRendererEvent, personList: ListPerson[]) => {
+      setPersonList([...personList])
+    }
+  )
+  console.log('retrigando')
 
   return (
     <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
+      <p>{personList.map((person) => `${person.createdAt}`)}</p>
+      <div className="action">
+        <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
+          Send IPC
+        </a>
+        <a target="_blank" rel="noreferrer" onClick={ipcHandle2}>
+          Get person
+        </a>
       </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
+
       <Versions></Versions>
     </>
   )

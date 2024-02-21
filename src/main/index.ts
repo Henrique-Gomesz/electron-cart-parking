@@ -5,8 +5,10 @@ import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { PersonRepository } from './db/repositories/person-repository'
 import { Person, PersonModel } from './db/schemas/person-schema'
-import {CartModel} from './db/schemas/cart-schema'
+import { CartModel } from './db/schemas/cart-schema'
 import { CartRepository } from './db/repositories/cart-repository'
+import { MonthlyDebtsRepository } from './db/repositories/monthly-debts-repository'
+import { MonthlyDebtsModel } from './db/schemas/monthly-debts-schema'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -49,8 +51,10 @@ app.whenReady().then(() => {
     .then(() => {
       console.log('Connected to MongoDB')
       electronApp.setAppUserModelId('com.electron')
-      const personRepository = new PersonRepository(PersonModel)
+      const monthlyDebtsRepository = new MonthlyDebtsRepository(MonthlyDebtsModel)
       const cartRepository = new CartRepository(CartModel)
+      const personRepository = new PersonRepository(PersonModel)
+
       // Default open or close DevTools by F12 in development
       // and ignore CommandOrControl + R in production.
       // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -66,6 +70,23 @@ app.whenReady().then(() => {
 
         const created = await personRepository.create(person)
         console.log(created.id)
+      })
+
+      ipcMain.on('list-person', async (event) => {
+        const list = await personRepository.findAll()
+
+        event.reply(
+          'list-person-reply',
+          list.map((person) => ({
+            id: person.id,
+            name: person.name,
+            document: person.document,
+            telephone: person.telephone,
+            active: person.active,
+            createdAt: person.createdAt,
+            updatedAt: person.updatedAt
+          }))
+        )
       })
 
       createWindow()

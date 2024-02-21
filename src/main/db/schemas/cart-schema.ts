@@ -6,12 +6,12 @@ export interface Cart extends DocumentModel {
   name: string
 }
 
-export const CartSchema = new mongoose.Schema(
+export const CartSchema = new mongoose.Schema<Cart>(
   {
-    personId: { type: mongoose.Types.ObjectId, required: true, ref: 'Person' },
+    personId: mongoose.Types.ObjectId,
     name: { type: String, required: true }
   },
   { timestamps: true }
 )
 
-export const CartModel = mongoose.model('Cart', CartSchema, 'cart')
+export const CartModel = mongoose.model<Cart>('Cart', CartSchema, 'cart')

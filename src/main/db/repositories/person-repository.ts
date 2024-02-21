@@ -17,7 +17,7 @@ export class PersonRepository {
   }
 
   public async findAll(): Promise<Person[]> {
-    return this.model.find().exec()
+    return await this.model.find().exec()
   }
 
   public async update(id: string, person: Partial<Person>): Promise<Person | null> {
