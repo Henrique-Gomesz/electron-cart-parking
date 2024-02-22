@@ -9,6 +9,11 @@ import { CartModel } from './db/schemas/cart-schema'
 import { CartRepository } from './db/repositories/cart-repository'
 import { MonthlyDebtsRepository } from './db/repositories/monthly-debts-repository'
 import { MonthlyDebtsModel } from './db/schemas/monthly-debts-schema'
+
+const monthlyDebtsRepository = new MonthlyDebtsRepository(MonthlyDebtsModel)
+const cartRepository = new CartRepository(CartModel)
+const personRepository = new PersonRepository(PersonModel)
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -51,9 +56,6 @@ app.whenReady().then(() => {
     .then(() => {
       console.log('Connected to MongoDB')
       electronApp.setAppUserModelId('com.electron')
-      const monthlyDebtsRepository = new MonthlyDebtsRepository(MonthlyDebtsModel)
-      const cartRepository = new CartRepository(CartModel)
-      const personRepository = new PersonRepository(PersonModel)
 
       // Default open or close DevTools by F12 in development
       // and ignore CommandOrControl + R in production.

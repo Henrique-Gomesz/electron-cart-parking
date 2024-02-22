@@ -1,9 +1,7 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
-
 import { IpcRendererEvent } from 'electron'
-import { ListPerson } from './entities/person'
 import { useState } from 'react'
+import { NavBar } from './components/nav-bar/nav-bar'
+import { ListPerson } from './entities/person'
 function App(): JSX.Element {
   const [personList, setPersonList] = useState<ListPerson[]>([])
   const ipcHandle = (): void =>
@@ -23,17 +21,7 @@ function App(): JSX.Element {
 
   return (
     <>
-      <p>{personList.map((person) => `${person.createdAt}`)}</p>
-      <div className="action">
-        <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-          Send IPC
-        </a>
-        <a target="_blank" rel="noreferrer" onClick={ipcHandle2}>
-          Get person
-        </a>
-      </div>
-
-      <Versions></Versions>
+      <NavBar />
     </>
   )
 }
