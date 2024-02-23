@@ -17,7 +17,7 @@ function App(): JSX.Element {
       setPersonList([...personList])
     }
   )
-  console.log('retrigando')
+  
 
   return (
     <>
