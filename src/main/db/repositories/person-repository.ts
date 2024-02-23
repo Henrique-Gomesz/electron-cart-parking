@@ -9,7 +9,7 @@ export class PersonRepository {
   }
 
   public async create(person: Partial<Person>): Promise<Person> {
-    return this.model.create(person)
+    return await this.model.create(person)
   }
 
   public async findById(id: string): Promise<Person | null> {

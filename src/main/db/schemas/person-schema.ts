@@ -13,7 +13,7 @@ export const PersonSchema = new mongoose.Schema<Person>(
     name: { type: String, required: true },
     document: { type: String, required: true },
     telephone: { type: String, required: true },
-    active: { type: Boolean, required: true }
+    active: { type: Boolean, default: true}
   },
   { timestamps: true }
 )

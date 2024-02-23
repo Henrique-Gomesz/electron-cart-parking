@@ -1,37 +1,57 @@
-import { NavbarButtons } from '@renderer/components/nav-bar/nav-bar'
-import { ReactElement, useState } from 'react'
+import { NavbarButtons } from "@renderer/components/nav-bar/nav-bar";
+import { PersonFormScreen } from "@renderer/screens/person-form-screen/person-form-screen";
+import { ReactElement, useState } from "react";
 
 export enum Screens {
-  CadastrarUsuarios = 'Cadastrar Usuários',
-  VerificarPendencias = 'Verificar Pendências',
-  Three = 'Three'
+  CadastrarUsuarios = "Cadastrar Usuários",
+  VerificarPendencias = "Verificar Pendências",
+  Three = "Three",
 }
 
-export const useNavigation = (): void => {
-  const [screen, setScreen] = useState<Screens>(Screens.CadastrarUsuarios)
+type UseNavigation = {
+  onMenuItemPress: (pressedButton: NavbarButtons) => void;
+  renderScreen: () => ReactElement;
+};
+
+export const useNavigation = (): UseNavigation => {
+  const [screen, setScreen] = useState<Screens>(Screens.CadastrarUsuarios);
+
+  const SCREEN_MAPPER = new Map<Screens, ReactElement>([
+    [
+      Screens.CadastrarUsuarios,
+      <PersonFormScreen key={Screens.CadastrarUsuarios} />,
+    ],
+    [
+      Screens.VerificarPendencias,
+      <div key={Screens.VerificarPendencias}>Verificar Pendencias</div>,
+    ],
+    [Screens.Three, <div key={Screens.Three}>Three</div>],
+  ]);
 
   const onMenuItemPress = (pressedButton: NavbarButtons): void => {
     switch (pressedButton) {
       case NavbarButtons.CadastrarUsuarios:
-        setScreen(Screens.CadastrarUsuarios)
-        break
+        setScreen(Screens.CadastrarUsuarios);
+        break;
       case NavbarButtons.VerificarPendencias:
-        setScreen(Screens.VerificarPendencias)
-        break
+        setScreen(Screens.VerificarPendencias);
+        break;
       case NavbarButtons.Three:
-        setScreen(Screens.Three)
-        break
+        setScreen(Screens.Three);
+        break;
     }
+  };
+
+  function renderContent(): ReactElement {
+    return SCREEN_MAPPER.get(screen) ?? <div>Not Found</div>;
   }
 
   function renderScreen(): ReactElement {
-    switch (screen) {
-      case Screens.CadastrarUsuarios:
-        return <div>Cadastrar Usuarios</div>
-      case Screens.VerificarPendencias:
-        return <div>Verificar Pendencias</div>
-      case Screens.Three:
-        return <div>Three</div>
-    }
+    return renderContent();
   }
-}
+
+  return {
+    onMenuItemPress,
+    renderScreen,
+  };
+};
