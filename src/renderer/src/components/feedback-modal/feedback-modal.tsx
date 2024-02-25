@@ -1,7 +1,6 @@
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { SvgIconTypeMap } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { ReactElement } from "react";
+import { SvgIconTypeMap } from '@mui/material'
+import { OverridableComponent } from '@mui/material/OverridableComponent'
+import { ReactElement } from 'react'
 import {
   Button,
   ButtonWrapper,
@@ -9,28 +8,36 @@ import {
   Message,
   Title,
   TitleWrapper,
-  Wrapper,
-} from "./feedback-modal.styles";
+  Wrapper
+} from './feedback-modal.styles'
+import { Icon } from '@renderer/types/icon-type'
 type Props = {
-  Icon: OverridableComponent<SvgIconTypeMap<object, "svg">> & {
-    muiName: string;
-  };
-  onPress: () => void;
-};
+  Icon: Icon
+  title: string
+  message: string
+  iconColor: 'success' | 'error' | 'primary'
+  onPress: () => void
+}
 
-export const FeedbackModal = ({ onPress,Icon }: Props): ReactElement => {
+export const FeedbackModal = ({
+  onPress,
+  Icon,
+  message,
+  title,
+  iconColor
+}: Props): ReactElement => {
   return (
     <Wrapper>
       <IconWrapper>
-        <Icon fontSize="large" color="success" />
+        <Icon fontSize="large" color={iconColor} />
       </IconWrapper>
       <TitleWrapper>
-        <Title>Child Modal</Title>
+        <Title>{title}</Title>
       </TitleWrapper>
-      <Message>Child Modal</Message>
+      <Message>{message}</Message>
       <ButtonWrapper>
         <Button onClick={onPress}>Fechar</Button>
       </ButtonWrapper>
     </Wrapper>
-  );
-};
+  )
+}

@@ -1,24 +1,40 @@
-import { SavePerson } from '@renderer/entities/person'
-import { useState } from 'react'
+import { SavePerson } from '@renderer/entities/person';
+import { useEffect, useState } from 'react';
 
 type UseSavePersonAction = {
-  savePersonAction: (person: SavePerson) => void
-  reply: boolean | undefined
-}
+  savePersonAction: (person: SavePerson) => void;
+  reply: boolean | undefined;
+};
 
 export const useSavePersonAction = (): UseSavePersonAction => {
-  const [reply, setReply] = useState<boolean | undefined>(undefined)
+  const [reply, setReply] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    console.log('registrando listeners');
+    window.electron.ipcRenderer.on(
+      'create-person-reply',
+      (_event, reply: boolean) => {
+        savePersonReply(reply);
+      },
+    );
+
+    return () => {
+      console.log('limpando listeners');
+      window.electron.ipcRenderer.removeAllListeners('create-person-reply');
+    };
+  }, []);
 
   function savePersonAction(person: SavePerson): void {
-    window.electron.ipcRenderer.send('create-person', person)
+    setReply(undefined);
+    window.electron.ipcRenderer.send('create-person', person);
   }
 
-  window.electron.ipcRenderer.on('create-person-reply', (_event, reply: boolean) => {
-    setReply(reply)
-  })
+  function savePersonReply(reply: boolean): void {
+    setReply(reply);
+  }
 
   return {
     savePersonAction,
-    reply
-  }
-}
+    reply,
+  };
+};

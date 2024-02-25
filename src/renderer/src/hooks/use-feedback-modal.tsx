@@ -1,14 +1,26 @@
-import { Modal } from "@mui/material";
-import { FeedbackModal } from "@renderer/components/feedback-modal/feedback-modal";
-import { ReactElement, useState } from "react";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import { Modal } from '@mui/material';
+import { FeedbackModal } from '@renderer/components/feedback-modal/feedback-modal';
+import { ReactElement, useState } from 'react';
+import { Icon } from '@renderer/types/icon-type';
 type UseFeedbackModal = {
   openModal: () => void;
   closeModal: () => void;
   renderFeedbackModal: () => ReactElement;
 };
 
-export const useFeedbackModal = (): UseFeedbackModal => {
+type Props = {
+  title: string;
+  message: string;
+  icon: Icon;
+  iconColor?: 'success' | 'error' | 'primary';
+};
+
+export const useFeedbackModal = ({
+  icon,
+  message,
+  title,
+  iconColor = 'primary',
+}: Props): UseFeedbackModal => {
   const [open, setOpen] = useState(false);
 
   function openModal(): void {
@@ -23,18 +35,25 @@ export const useFeedbackModal = (): UseFeedbackModal => {
     return (
       <Modal
         style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
         open={open}
         onClose={closeModal}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
+        aria-labelledby='child-modal-title'
+        aria-describedby='child-modal-description'
       >
         <>
-          <FeedbackModal onPress={closeModal} Icon={CheckCircleRoundedIcon} />;
+          <FeedbackModal
+            iconColor={iconColor}
+            title={title}
+            message={message}
+            onPress={closeModal}
+            Icon={icon}
+          />
+          ;
         </>
       </Modal>
     );

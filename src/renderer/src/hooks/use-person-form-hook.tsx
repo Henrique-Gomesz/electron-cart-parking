@@ -1,31 +1,37 @@
-import { SavePerson } from "@renderer/entities/person";
+import { useSavePersonAction } from '@renderer/actions/save-person-action';
 import {
-  SubmitButton,
-  TextInput,
-} from "@renderer/screens/person-form-screen/person-form.screen.styles";
-import { useSavePersonAction } from "@renderer/actions/save-person-action";
-import { ChangeEvent, ReactElement, useState } from "react";
+  CNPJ_MASK,
+  CPF_MASK,
+  TELEPHONE_MASK,
+} from '@renderer/components/text-field/text-field-masks';
+import { TextField } from '@renderer/components/text-field/text-field.';
+import { SavePerson } from '@renderer/entities/person';
+import { SubmitButton } from '@renderer/screens/person-form-screen/person-form.screen.styles';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
 
 type UsePersonForm = {
   form: SavePerson;
   handleFormChange: (event: ChangeEvent<HTMLInputElement>) => void;
   renderForm: () => ReactElement;
   reply: boolean | undefined;
+  clearForm: () => void;
 };
 
 export const usePersonForm = (): UsePersonForm => {
   const { savePersonAction, reply } = useSavePersonAction();
 
   const [form, setForm] = useState<SavePerson>({
-    name: "",
-    document: "",
-    telephone: "",
+    name: '',
+    document: '',
+    telephone: '',
   });
 
   function handleFormChange(event: ChangeEvent<HTMLInputElement>): void {
+    const data = event.target.value;
+
     setForm({
       ...form,
-      [event.target.name]: event.target.value,
+      [event.target.name]: data,
     });
   }
 
@@ -36,34 +42,44 @@ export const usePersonForm = (): UsePersonForm => {
     savePersonAction(form);
   }
 
+  function clearForm(): void {
+    setForm({
+      name: '',
+      document: '',
+      telephone: '',
+    });
+  }
+
   function renderForm(): ReactElement {
     return (
       <>
-        <TextInput
+        <TextField
           onChange={handleFormChange}
           value={form.name}
-          name="name"
-          label="Nome"
-          variant="outlined"
-          placeholder="João Carlos"
+          name='name'
+          label='Nome'
+          placeholder='João Carlos'
         />
-        <TextInput
+        <TextField
+          isMasked
+          mask={CPF_MASK}
           onChange={handleFormChange}
           value={form.document}
-          name="document"
-          label="CPF/CNPJ"
-          variant="outlined"
-          placeholder="13-614-538-80"
+          name='document'
+          label='CPF/CNPJ'
+          placeholder='416.662.128-80'
         />
-        <TextInput
+        <TextField
+          isMasked
+          mask={TELEPHONE_MASK}
+          name='telephone'
+          id='telehpone-input'
           onChange={handleFormChange}
           value={form.telephone}
-          name="telephone"
-          label="Telefone"
-          variant="outlined"
-          placeholder="(11) 99913-9204"
+          placeholder='(11) 99913-9204'
+          label='Telefone'
         />
-        <SubmitButton onClick={onSubtmit} variant="contained">
+        <SubmitButton onClick={onSubtmit} variant='contained'>
           Enviar
         </SubmitButton>
       </>
@@ -75,5 +91,6 @@ export const usePersonForm = (): UsePersonForm => {
     handleFormChange,
     renderForm,
     reply,
+    clearForm,
   };
 };

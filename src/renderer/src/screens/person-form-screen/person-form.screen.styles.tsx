@@ -1,5 +1,5 @@
-import { Button, TextField } from "@mui/material";
-import styled from "styled-components";
+import { Button, TextField } from '@mui/material';
+import styled from 'styled-components';
 
 export const FormWrapper = styled.div`
   padding: 32px;
@@ -11,8 +11,8 @@ export const FormWrapper = styled.div`
 `;
 
 export const TextInput = styled(TextField).attrs({
-  id: "filled-basic",
-  variant: "outlined",
+  id: 'filled-basic',
+  variant: 'outlined',
 })``;
 
 export const SubmitButton = styled(Button)``;

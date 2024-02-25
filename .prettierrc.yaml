@@ -1,4 +1,9 @@
+tabWidth: 2
 singleQuote: true
-semi: false
-printWidth: 100
-trailingComma: none
+semi: true
+trailingComma: "all"
+printWidth: 80
+parser: typescript
+jsxSingleQuote: true
+jsxBracketSameLine: false
+endOfLine: lf
