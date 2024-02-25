@@ -7,6 +7,7 @@ import { useFeedbackModal } from '@renderer/hooks/use-feedback-modal';
 import { isNil } from 'lodash';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
+
 export const PersonFormScreen = (): ReactElement => {
   const {
     openModal: successOpenModal,
@@ -42,14 +43,12 @@ export const PersonFormScreen = (): ReactElement => {
   }, [reply]);
 
   return (
-    <>
-      <BaseScreen title={Screens.CadastrarUsuarios}>
-        <>
-          <FormWrapper>{renderForm()}</FormWrapper>
-          {successRenderFeedbackModal()}
-          {errorRenderFeedbackModal()}
-        </>
-      </BaseScreen>
-    </>
+    <BaseScreen title={Screens.CadastrarUsuarios}>
+      <>
+        <FormWrapper>{renderForm()}</FormWrapper>
+        {successRenderFeedbackModal()}
+        {errorRenderFeedbackModal()}
+      </>
+    </BaseScreen>
   );
 };
