@@ -37,7 +37,6 @@ export const PersonFormScreen = (): ReactElement => {
       successOpenModal();
       clearForm();
     } else {
-      console.log('open error modal');
       errorOpenModal();
     }
   }, [reply]);

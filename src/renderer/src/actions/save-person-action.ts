@@ -10,7 +10,6 @@ export const useSavePersonAction = (): UseSavePersonAction => {
   const [reply, setReply] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    console.log('registrando listeners');
     window.electron.ipcRenderer.on(
       'create-person-reply',
       (_event, reply: boolean) => {
@@ -19,7 +18,6 @@ export const useSavePersonAction = (): UseSavePersonAction => {
     );
 
     return () => {
-      console.log('limpando listeners');
       window.electron.ipcRenderer.removeAllListeners('create-person-reply');
     };
   }, []);
