@@ -63,7 +63,7 @@ app.whenReady().then(() => {
       app.on("browser-window-created", (_, window) => {
         optimizer.watchWindowShortcuts(window);
       });
-
+      // create person action
       ipcMain.on("create-person", async (event, person: Person) => {
         try {
           await personRepository.create(person);

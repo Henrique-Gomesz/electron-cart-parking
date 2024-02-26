@@ -39,7 +39,13 @@ export const usePersonForm = (): UsePersonForm => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ): void {
     event.preventDefault();
-    savePersonAction(form);
+
+    const data = form;
+
+    data.document = data.document.replace(/[^0-9]/g, '');
+    data.telephone = data.telephone.replace(/[^0-9]/g, '');
+
+    savePersonAction(data);
   }
 
   function clearForm(): void {

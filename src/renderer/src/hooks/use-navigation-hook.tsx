@@ -14,7 +14,7 @@ type UseNavigation = {
 };
 
 export const useNavigation = (): UseNavigation => {
-  const [screen, setScreen] = useState<Screens>(Screens.CadastrarUsuarios);
+  const [screen, setScreen] = useState<Screens>(Screens.GerenciarCarrinhos);
 
   const SCREEN_MAPPER = new Map<Screens, ReactElement>([
     [

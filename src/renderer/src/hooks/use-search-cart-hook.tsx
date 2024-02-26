@@ -1,4 +1,4 @@
-import { SearchRounded } from '@mui/icons-material';
+import { AddCircle, SearchRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { CPF_MASK } from '@renderer/components/text-field/text-field-masks';
 import { TextField } from '@renderer/components/text-field/text-field.';
@@ -32,6 +32,9 @@ export const useSearchCart = (): UseSearchCart => {
         />
         <Button variant='contained' startIcon={<SearchRounded />}>
           buscar
+        </Button>
+        <Button variant='text' startIcon={<AddCircle />}>
+          novo
         </Button>
       </SearchCartWrapper>
     );

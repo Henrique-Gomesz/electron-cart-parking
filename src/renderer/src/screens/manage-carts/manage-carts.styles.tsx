@@ -12,3 +12,5 @@ export const SearchCartWrapper = styled.div`
   display: flex;
   gap: 8px;
 `;
+
+export const CartListWrapper = styled.div``
