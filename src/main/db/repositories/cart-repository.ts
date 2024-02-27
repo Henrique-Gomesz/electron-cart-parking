@@ -20,6 +20,12 @@ export class CartRepository {
     return await this.model.find({ personDocument }).exec();
   }
 
+  public async enable(id: string): Promise<Cart | null> {
+    return this.model
+      .findByIdAndUpdate(id, { active: true }, { new: true })
+      .exec();
+  }
+
   public async findAll(): Promise<Cart[]> {
     return this.model.find().exec();
   }

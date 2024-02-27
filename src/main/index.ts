@@ -105,6 +105,21 @@ app.whenReady().then(() => {
         }
       });
 
+      ipcMain.on('enable-cart', async (event, cartId: string) => {
+        try {
+          const cart = await cartRepository.enable(cartId);
+
+          if (isNil(cart)) return event.reply('enable-cart-reply', false);
+
+          await monthlyDebtsRepository.create({
+            cartId: cartId,
+            paymentDate: new Date(),
+          });
+        } catch (error) {
+          event.reply('enable-cart-reply', false);
+        }
+      });
+
       createWindow();
 
       app.on('activate', function () {
