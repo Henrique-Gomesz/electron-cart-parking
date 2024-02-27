@@ -1,6 +1,5 @@
 import { useSavePersonAction } from '@renderer/actions/save-person-action';
 import {
-  CNPJ_MASK,
   CPF_MASK,
   TELEPHONE_MASK,
 } from '@renderer/components/text-field/text-field-masks';

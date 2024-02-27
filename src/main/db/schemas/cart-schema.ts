@@ -1,17 +1,19 @@
-import mongoose from 'mongoose'
-import { DocumentModel } from './model-interface'
+import mongoose from 'mongoose';
+import { DocumentModel } from './model-interface';
 
 export interface Cart extends DocumentModel {
-  personId: mongoose.Types.ObjectId
-  name: string
+  personDocument: string;
+  name: string;
+  active: boolean;
 }
 
 export const CartSchema = new mongoose.Schema<Cart>(
   {
-    personId: mongoose.Types.ObjectId,
-    name: { type: String, required: true }
+    personDocument: { type: String, required: true },
+    name: { type: String, required: true },
+    active: { type: Boolean, default: false },
   },
-  { timestamps: true }
-)
+  { timestamps: true },
+);
 
-export const CartModel = mongoose.model<Cart>('Cart', CartSchema, 'cart')
+export const CartModel = mongoose.model<Cart>('Cart', CartSchema, 'cart');
