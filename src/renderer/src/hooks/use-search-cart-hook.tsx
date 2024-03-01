@@ -1,5 +1,6 @@
 import { AddCircle, SearchRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useEnableCartAction } from '@renderer/actions/enable-cart-action';
 import { useListCartAction } from '@renderer/actions/list-carts-action';
 import { CPF_MASK } from '@renderer/components/text-field/text-field-masks';
 import { TextField } from '@renderer/components/text-field/text-field.';
@@ -11,6 +12,7 @@ type UseSearchCart = {
   document: string;
   renderSearch: () => ReactElement;
   carts: ListCart[];
+  enableCart: (cartId: string, document: string, value: boolean) => void;
 };
 
 type Props = {
@@ -20,6 +22,8 @@ type Props = {
 export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
   const [document, setDocument] = useState<string>('');
   const { carts, getCartsAction } = useListCartAction();
+
+  const { enableCart: enableCartAction } = useEnableCartAction();
 
   function handleFormChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const data = event.target.value;
@@ -33,6 +37,16 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     const documentWithoutMask = document.replace(/[^0-9]/g, '');
 
     getCartsAction(documentWithoutMask);
+  }
+
+  function switchCart(cartId: string, document: string, value: boolean): void {
+    if (value) {
+      enableCartAction(cartId);
+    }
+    else{
+      // TODO disable 
+    }
+    getCartsAction(document);
   }
 
   function renderSearch(): ReactElement {
@@ -65,5 +79,6 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     document,
     renderSearch,
     carts,
+    enableCart,
   };
 };

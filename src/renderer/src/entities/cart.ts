@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongoose';
 
 export interface SaveCart {
   personDocument: string;
@@ -6,7 +5,7 @@ export interface SaveCart {
 }
 
 export interface ListCart {
-  id: ObjectId;
+  id: string;
   personDocument: string;
   name: string;
   active: boolean;

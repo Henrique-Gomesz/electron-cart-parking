@@ -8,8 +8,10 @@ export class MonthlyDebtsRepository {
     this.model = model;
   }
 
-  public async create(cart: Partial<MonthlyDebts>): Promise<MonthlyDebts> {
-    return this.model.create(cart);
+  public async create(
+    cart: Partial<MonthlyDebts>,
+  ): Promise<MonthlyDebts | null> {
+    return await this.model.create(cart);
   }
 
   public async findById(id: string): Promise<MonthlyDebts | null> {

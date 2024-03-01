@@ -12,11 +12,17 @@ import { isEmpty, noop } from 'lodash';
 
 type Props = {
   data: ListCart[];
+  onPressDelete: (cartId: string) => void;
+  onChangeSwitch: (cartId: string, document: string, value: boolean) => void;
 };
 
-export const CartList = ({ data }: Props): React.ReactElement => {
+export const CartList = ({
+  data,
+  onChangeSwitch,
+}: Props): React.ReactElement => {
   function renderItems(): React.ReactElement[] | React.ReactElement {
     return data.map((cart, index) => {
+      console.log(cart);
       return (
         <ListItem key={index}>
           <ListItemText
@@ -35,7 +41,13 @@ export const CartList = ({ data }: Props): React.ReactElement => {
             </Button>
             <Switch
               edge='end'
-              onChange={noop}
+              onChange={(event) => {
+                onChangeSwitch(
+                  cart.id,
+                  cart.personDocument,
+                  event.target.checked,
+                );
+              }}
               checked={cart.active}
               inputProps={{
                 'aria-labelledby': 'switch-list-label-wifi',

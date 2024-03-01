@@ -81,7 +81,7 @@ app.whenReady().then(() => {
           );
 
           if (isNil(person)) return event.reply('create-cart-reply', false);
-
+            
           await cartRepository.create(cart);
           event.reply('create-cart-reply', true);
         } catch (error) {
@@ -98,7 +98,14 @@ app.whenReady().then(() => {
           const carts = await cartRepository.findByUserDocument(personDocument);
           event.reply(
             'list-cart-reply',
-            carts.map((cart) => cart.toObject()),
+            carts.map((cart) => ({
+              id: cart.id,
+              personDocument: cart.personDocument,
+              name: cart.name,
+              active: cart.active,
+              createdAt: cart.createdAt,
+              updatedAt: cart.updatedAt,
+            })),
           );
         } catch (error) {
           event.reply('list-cart-reply', []);
@@ -107,14 +114,18 @@ app.whenReady().then(() => {
 
       ipcMain.on('enable-cart', async (event, cartId: string) => {
         try {
+          console.log('enable-cart', cartId);
           const cart = await cartRepository.enable(cartId);
 
           if (isNil(cart)) return event.reply('enable-cart-reply', false);
 
-          await monthlyDebtsRepository.create({
+          const monthlyDebt = await monthlyDebtsRepository.create({
             cartId: cartId,
-            paymentDate: new Date(),
           });
+
+          if (isNil(monthlyDebt))
+            return event.reply('enable-cart-reply', false);
+          return event.reply('enable-cart-reply', true);
         } catch (error) {
           event.reply('enable-cart-reply', false);
         }

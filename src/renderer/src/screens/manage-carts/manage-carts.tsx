@@ -7,10 +7,9 @@ import { CreateCart } from './components/create-cart/create-cart';
 import { Wrapper } from './manage-carts.styles';
 
 export const ManageCarts = (): ReactElement => {
-  const { renderSearch, carts } = useSearchCart({
+  const { renderSearch, carts,enableCart } = useSearchCart({
     onPressNew: showCreateCartForm,
   });
-
   const [showCreateCart, setShowCreateCart] = useState<boolean>(false);
 
   function showCreateCartForm(): void {
@@ -29,7 +28,11 @@ export const ManageCarts = (): ReactElement => {
     return (
       <>
         {renderSearch()}
-        <CartList data={carts} />
+        <CartList
+          onChangeSwitch={enableCart}
+          onPressDelete={() => {}} 
+          data={carts}
+        />
       </>
     );
   }
