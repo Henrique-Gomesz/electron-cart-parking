@@ -1,15 +1,15 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { BrowserWindow, app, ipcMain, shell } from 'electron';
+import { isEmpty, isNil } from 'lodash';
 import mongoose from 'mongoose';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
-import { PersonRepository } from './db/repositories/person-repository';
-import { Person, PersonModel } from './db/schemas/person-schema';
-import { Cart, CartModel } from './db/schemas/cart-schema';
 import { CartRepository } from './db/repositories/cart-repository';
 import { MonthlyDebtsRepository } from './db/repositories/monthly-debts-repository';
+import { PersonRepository } from './db/repositories/person-repository';
+import { Cart, CartModel } from './db/schemas/cart-schema';
 import { MonthlyDebtsModel } from './db/schemas/monthly-debts-schema';
-import { isNil } from 'lodash';
+import { Person, PersonModel } from './db/schemas/person-schema';
 
 const monthlyDebtsRepository = new MonthlyDebtsRepository(MonthlyDebtsModel);
 const cartRepository = new CartRepository(CartModel);
@@ -81,7 +81,7 @@ app.whenReady().then(() => {
           );
 
           if (isNil(person)) return event.reply('create-cart-reply', false);
-            
+
           await cartRepository.create(cart);
           event.reply('create-cart-reply', true);
         } catch (error) {
@@ -114,7 +114,6 @@ app.whenReady().then(() => {
 
       ipcMain.on('enable-cart', async (event, cartId: string) => {
         try {
-          console.log('enable-cart', cartId);
           const cart = await cartRepository.enable(cartId);
 
           if (isNil(cart)) return event.reply('enable-cart-reply', false);
@@ -128,6 +127,29 @@ app.whenReady().then(() => {
           return event.reply('enable-cart-reply', true);
         } catch (error) {
           event.reply('enable-cart-reply', false);
+        }
+      });
+
+      ipcMain.on('disable-cart', async (event, cartId: string) => {
+        try {
+          const debtsList = await monthlyDebtsRepository.findByCartId(cartId);
+
+          if (isEmpty(debtsList))
+            return event.reply('disable-cart-reply', false);
+
+          const monthsInDebt = debtsList.filter((debt) =>
+            isNil(debt.paymentDate),
+          );
+
+          if (isEmpty(monthsInDebt)) {
+            const cart = await cartRepository.disable(cartId);
+            if (isNil(cart)) return event.reply('disable-cart-reply', false);
+            return event.reply('disable-cart-reply', true);
+          }
+
+          return event.reply('disable-cart-reply', false);
+        } catch (error) {
+          event.reply('disable-cart-reply', false);
         }
       });
 

@@ -1,5 +1,6 @@
 import { AddCircle, SearchRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useDisableCartAction } from '@renderer/actions/disable-cart-action';
 import { useEnableCartAction } from '@renderer/actions/enable-cart-action';
 import { useListCartAction } from '@renderer/actions/list-carts-action';
 import { CPF_MASK } from '@renderer/components/text-field/text-field-masks';
@@ -12,7 +13,7 @@ type UseSearchCart = {
   document: string;
   renderSearch: () => ReactElement;
   carts: ListCart[];
-  enableCart: (cartId: string, document: string, value: boolean) => void;
+  cartSwitch: (cartId: string, document: string, value: boolean) => void;
 };
 
 type Props = {
@@ -24,6 +25,7 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
   const { carts, getCartsAction } = useListCartAction();
 
   const { enableCart: enableCartAction } = useEnableCartAction();
+  const { disableCart } = useDisableCartAction();
 
   function handleFormChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const data = event.target.value;
@@ -39,12 +41,11 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     getCartsAction(documentWithoutMask);
   }
 
-  function switchCart(cartId: string, document: string, value: boolean): void {
+  function cartSwitch(cartId: string, document: string, value: boolean): void {
     if (value) {
       enableCartAction(cartId);
-    }
-    else{
-      // TODO disable 
+    } else {
+      disableCart(cartId);
     }
     getCartsAction(document);
   }
@@ -79,6 +80,6 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     document,
     renderSearch,
     carts,
-    enableCart,
+    cartSwitch,
   };
 };

@@ -26,6 +26,12 @@ export class CartRepository {
       .exec();
   }
 
+  public async disable(id: string): Promise<Cart | null> {
+    return this.model
+      .findByIdAndUpdate(id, { active: false }, { new: true })
+      .exec();
+  }
+
   public async findAll(): Promise<Cart[]> {
     return this.model.find().exec();
   }

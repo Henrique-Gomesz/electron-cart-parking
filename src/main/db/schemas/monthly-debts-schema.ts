@@ -3,7 +3,7 @@ import { DocumentModel } from './model-interface';
 
 export interface MonthlyDebts extends DocumentModel {
   cartId: string;
-  paymentDate: Date;
+  paymentDate: Date | null;
 }
 
 export const MonthlyDebtsSchema = new mongoose.Schema<MonthlyDebts>(

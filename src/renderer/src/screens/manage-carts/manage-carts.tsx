@@ -5,12 +5,15 @@ import { ReactElement, useState } from 'react';
 import { CartList } from './components/cart-list/cart-list';
 import { CreateCart } from './components/create-cart/create-cart';
 import { Wrapper } from './manage-carts.styles';
+import { CartMonthlyDebts } from './components/cart-monthly-debts/cart-monthly-debts';
 
 export const ManageCarts = (): ReactElement => {
-  const { renderSearch, carts,enableCart } = useSearchCart({
+  const { renderSearch, carts, cartSwitch } = useSearchCart({
     onPressNew: showCreateCartForm,
   });
   const [showCreateCart, setShowCreateCart] = useState<boolean>(false);
+
+  const [showCartMonthlyDebts, setShowCartMonthlyDebts] = useState(false);
 
   function showCreateCartForm(): void {
     setShowCreateCart(true);
@@ -20,7 +23,14 @@ export const ManageCarts = (): ReactElement => {
     setShowCreateCart(false);
   }
 
+  function onPressCalendar(): void {
+    setShowCartMonthlyDebts(true);
+  }
+
   function renderContent(): ReactElement {
+    if (showCartMonthlyDebts) {
+      return <CartMonthlyDebts />;
+    }
     if (showCreateCart) {
       return <CreateCart onGoBack={hideCreateCartForm} />;
     }
@@ -29,8 +39,9 @@ export const ManageCarts = (): ReactElement => {
       <>
         {renderSearch()}
         <CartList
-          onChangeSwitch={enableCart}
-          onPressDelete={() => {}} 
+          onPressCalendar={onPressCalendar}
+          onChangeSwitch={cartSwitch}
+          onPressDelete={() => {}}
           data={carts}
         />
       </>

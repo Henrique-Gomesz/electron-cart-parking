@@ -1,28 +1,34 @@
-import { DeleteForever, EditRounded, Print } from '@mui/icons-material';
+import {
+  CalendarMonth,
+  DeleteForever,
+  EditRounded,
+  Print,
+} from '@mui/icons-material';
 import { Button } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Switch from '@mui/material/Switch';
+import { ListCart } from '@renderer/entities/cart';
+import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { ButtonsWrapper, Empty, EmptyWrapper } from './cart-list.styles';
-import { ListCart } from '@renderer/entities/cart';
-import { isEmpty, noop } from 'lodash';
 
 type Props = {
   data: ListCart[];
   onPressDelete: (cartId: string) => void;
   onChangeSwitch: (cartId: string, document: string, value: boolean) => void;
+  onPressCalendar: () => void;
 };
 
 export const CartList = ({
   data,
   onChangeSwitch,
+  onPressCalendar,
 }: Props): React.ReactElement => {
   function renderItems(): React.ReactElement[] | React.ReactElement {
     return data.map((cart, index) => {
-      console.log(cart);
       return (
         <ListItem key={index}>
           <ListItemText
@@ -30,6 +36,9 @@ export const CartList = ({
             primary={cart.name}
           />
           <ButtonsWrapper>
+            <Button onClick={onPressCalendar}>
+              <CalendarMonth color='success' />
+            </Button>
             <Button>
               <Print />
             </Button>

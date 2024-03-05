@@ -18,6 +18,14 @@ export class MonthlyDebtsRepository {
     return this.model.findById(id).exec();
   }
 
+  public async findByCartId(id: string): Promise<MonthlyDebts[]> {
+    return await this.model.find({ cartId: id }).exec();
+  }
+
+  public async setPaymentDate(id: string, paymentDate: Date): Promise<void> {
+    await this.model.updateOne({ id: id }, { paymentDate: paymentDate });
+  }
+
   public async findAll(): Promise<MonthlyDebts[]> {
     return this.model.find().exec();
   }
