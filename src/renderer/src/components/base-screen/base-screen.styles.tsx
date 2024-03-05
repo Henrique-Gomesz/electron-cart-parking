@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Screen = styled.div`
   display: flex;
@@ -6,7 +6,6 @@ export const Screen = styled.div`
   align-items: center;
   width: 100%;
   background-color: #ffffff;
-  
 `;
 
 export const TitleWrapper = styled.div`
@@ -24,5 +23,4 @@ export const ContentWrapper = styled.div`
   display: flex;
   height: 100%;
   width: 100%;
-
 `;

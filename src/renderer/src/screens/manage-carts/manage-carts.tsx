@@ -27,9 +27,13 @@ export const ManageCarts = (): ReactElement => {
     setShowCartMonthlyDebts(true);
   }
 
+  function hideCartMonthlyDebts(): void {
+    setShowCartMonthlyDebts(false);
+  }
+
   function renderContent(): ReactElement {
     if (showCartMonthlyDebts) {
-      return <CartMonthlyDebts />;
+      return <CartMonthlyDebts onGoBack={hideCartMonthlyDebts} />;
     }
     if (showCreateCart) {
       return <CreateCart onGoBack={hideCreateCartForm} />;

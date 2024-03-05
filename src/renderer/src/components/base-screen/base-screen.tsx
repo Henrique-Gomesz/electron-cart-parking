@@ -1,5 +1,10 @@
-import { ReactElement } from "react";
-import { ContentWrapper, Screen, Title, TitleWrapper } from "./base-screen.styles";
+import { ReactElement } from 'react';
+import {
+  ContentWrapper,
+  Screen,
+  Title,
+  TitleWrapper,
+} from './base-screen.styles';
 
 type BaseScreenProps = {
   children: ReactElement;
@@ -12,7 +17,9 @@ export const BaseScreen = ({
 }: BaseScreenProps): ReactElement => {
   return (
     <Screen>
-      <TitleWrapper><Title>{title}</Title></TitleWrapper>
+      <TitleWrapper>
+        <Title>{title}</Title>
+      </TitleWrapper>
       <ContentWrapper>{children}</ContentWrapper>
     </Screen>
   );

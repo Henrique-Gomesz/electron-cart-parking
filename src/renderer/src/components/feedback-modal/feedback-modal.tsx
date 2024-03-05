@@ -1,6 +1,5 @@
-import { SvgIconTypeMap } from '@mui/material'
-import { OverridableComponent } from '@mui/material/OverridableComponent'
-import { ReactElement } from 'react'
+import { Icon } from '@renderer/types/icon-type';
+import { ReactElement } from 'react';
 import {
   Button,
   ButtonWrapper,
@@ -8,28 +7,27 @@ import {
   Message,
   Title,
   TitleWrapper,
-  Wrapper
-} from './feedback-modal.styles'
-import { Icon } from '@renderer/types/icon-type'
+  Wrapper,
+} from './feedback-modal.styles';
 type Props = {
-  Icon: Icon
-  title: string
-  message: string
-  iconColor: 'success' | 'error' | 'primary'
-  onPress: () => void
-}
+  Icon: Icon;
+  title: string;
+  message: string;
+  iconColor: 'success' | 'error' | 'primary';
+  onPress: () => void;
+};
 
 export const FeedbackModal = ({
   onPress,
   Icon,
   message,
   title,
-  iconColor
+  iconColor,
 }: Props): ReactElement => {
   return (
     <Wrapper>
       <IconWrapper>
-        <Icon fontSize="large" color={iconColor} />
+        <Icon fontSize='large' color={iconColor} />
       </IconWrapper>
       <TitleWrapper>
         <Title>{title}</Title>
@@ -39,5 +37,5 @@ export const FeedbackModal = ({
         <Button onClick={onPress}>Fechar</Button>
       </ButtonWrapper>
     </Wrapper>
-  )
-}
+  );
+};

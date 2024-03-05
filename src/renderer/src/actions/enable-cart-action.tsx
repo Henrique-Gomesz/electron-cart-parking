@@ -5,15 +5,13 @@ type EnableCartAction = {
   reply: boolean;
 };
 
-
-
 export const useEnableCartAction = (): EnableCartAction => {
   const [reply, setReply] = useState<boolean>(false);
   useEffect(() => {
     window.electron.ipcRenderer.on(
       'enable-cart-reply',
       (_event, reply: boolean) => {
-        setReply(reply)
+        setReply(reply);
       },
     );
 

@@ -13,4 +13,4 @@ export const SearchCartWrapper = styled.div`
   gap: 8px;
 `;
 
-export const CartListWrapper = styled.div``
+export const CartListWrapper = styled.div``;

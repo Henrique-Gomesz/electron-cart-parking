@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 interface Timestamp {
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface DocumentModel extends mongoose.Document, Timestamp {}
