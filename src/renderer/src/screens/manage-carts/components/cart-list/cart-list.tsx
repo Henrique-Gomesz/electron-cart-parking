@@ -19,7 +19,7 @@ type Props = {
   data: ListCart[];
   onPressDelete: (cartId: string) => void;
   onChangeSwitch: (cartId: string, document: string, value: boolean) => void;
-  onPressCalendar: () => void;
+  onPressCalendar: (cartId: string) => void;
 };
 
 export const CartList = ({
@@ -36,7 +36,7 @@ export const CartList = ({
             primary={cart.name}
           />
           <ButtonsWrapper>
-            <Button onClick={onPressCalendar}>
+            <Button onClick={() => onPressCalendar(cart.id)}>
               <CalendarMonth color='success' />
             </Button>
             <Button>

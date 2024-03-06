@@ -8,6 +8,8 @@ import { Wrapper } from './manage-carts.styles';
 import { CartMonthlyDebts } from './components/cart-monthly-debts/cart-monthly-debts';
 
 export const ManageCarts = (): ReactElement => {
+  const [cartId, setCartId] = useState<string>('');
+
   const { renderSearch, carts, cartSwitch } = useSearchCart({
     onPressNew: showCreateCartForm,
   });
@@ -23,7 +25,8 @@ export const ManageCarts = (): ReactElement => {
     setShowCreateCart(false);
   }
 
-  function onPressCalendar(): void {
+  function onPressCalendar(cartId: string): void {
+    setCartId(cartId);
     setShowCartMonthlyDebts(true);
   }
 
@@ -33,7 +36,9 @@ export const ManageCarts = (): ReactElement => {
 
   function renderContent(): ReactElement {
     if (showCartMonthlyDebts) {
-      return <CartMonthlyDebts onGoBack={hideCartMonthlyDebts} />;
+      return (
+        <CartMonthlyDebts cartId={cartId} onGoBack={hideCartMonthlyDebts} />
+      );
     }
     if (showCreateCart) {
       return <CreateCart onGoBack={hideCreateCartForm} />;

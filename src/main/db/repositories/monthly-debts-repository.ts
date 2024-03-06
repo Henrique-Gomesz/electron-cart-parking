@@ -23,7 +23,7 @@ export class MonthlyDebtsRepository {
   }
 
   public async setPaymentDate(id: string, paymentDate: Date): Promise<void> {
-    await this.model.updateOne({ id: id }, { paymentDate: paymentDate });
+    await this.model.updateOne({ _id: id }, { paymentDate: paymentDate });
   }
 
   public async findAll(): Promise<MonthlyDebts[]> {

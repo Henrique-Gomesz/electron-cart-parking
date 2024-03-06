@@ -1,7 +1,8 @@
 import { ChevronLeft, Payments } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ListMonthlyDebts } from '@renderer/entities/monthly-debts';
+import { useGetMonthlyDebtsAction } from '@renderer/actions/get-monthly-debts-action';
+import { usePayMonthlyDebtsAction } from '@renderer/actions/pay-monthly-debts-action';
 import { isNil } from 'lodash';
 import * as React from 'react';
 import { ButtonsWrapper, TableWrapper } from './cart-monthly-debts.styles';
@@ -40,29 +41,33 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows: ListMonthlyDebts[] = [
-  {
-    id: '1',
-    cartId: 'cartId',
-    paymentDate: new Date(),
-    createdAt: new Date(),
-  },
-];
-
 type Props = {
+  cartId: string;
   onGoBack: () => void;
 };
 
-export const CartMonthlyDebts = ({ onGoBack }: Props): React.ReactElement => {
-  const [monthlyDebts, setMonthlyDebts] = React.useState<ListMonthlyDebts[]>(
-    [],
-  );
+export const CartMonthlyDebts = ({
+  onGoBack,
+  cartId,
+}: Props): React.ReactElement => {
+  const { debts, getMonthlyDebts } = useGetMonthlyDebtsAction();
+  const { payMonthlyDebts } = usePayMonthlyDebtsAction();
   const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
+
+  const onPayMonthlyDebts = (): void => {
+    if (selectedRows.length > 0) payMonthlyDebts(selectedRows);
+
+    setTimeout(() => getMonthlyDebts(cartId), 1000);
+  };
+
+  React.useEffect(() => {
+    getMonthlyDebts(cartId);
+  }, []);
 
   return (
     <TableWrapper>
       <DataGrid
-        rows={rows}
+        rows={debts}
         columns={columns}
         initialState={{
           pagination: {
@@ -80,7 +85,11 @@ export const CartMonthlyDebts = ({ onGoBack }: Props): React.ReactElement => {
         <Button startIcon={<ChevronLeft />} onClick={onGoBack}>
           Voltar
         </Button>
-        <Button variant='contained' startIcon={<Payments />} onClick={onGoBack}>
+        <Button
+          variant='contained'
+          startIcon={<Payments />}
+          onClick={onPayMonthlyDebts}
+        >
           Pagar
         </Button>
       </ButtonsWrapper>

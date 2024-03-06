@@ -153,6 +153,43 @@ app.whenReady().then(() => {
         }
       });
 
+      ipcMain.on('pay-monthly-debts', async (event, ids: string[]) => {
+        try {
+          for (const id of ids) {
+            const debt = await monthlyDebtsRepository.findById(id);
+            if (isNil(debt))
+              return event.reply('pay-monthly-debts-reply', false);
+
+            if (isNil(debt.paymentDate)) {
+              await monthlyDebtsRepository.setPaymentDate(id, new Date());
+            }
+          }
+
+          return event.reply('pay-monthly-debts-reply', true);
+        } catch (error) {
+          console.log(error);
+          event.reply('pay-monthly-debts-reply', false);
+        }
+      });
+
+      ipcMain.on('get-monthly-debts', async (event, cartId: string) => {
+        try {
+          const debts = await monthlyDebtsRepository.findByCartId(cartId);
+          if (isNil(debts)) return event.reply('get-monthly-debts-reply', []);
+
+          return event.reply(
+            'get-monthly-debts-reply',
+            debts.map((debt) => ({
+              id: debt.id,
+              paymentDate: debt.paymentDate,
+              createdAt: debt.createdAt,
+            })),
+          );
+        } catch (error) {
+          event.reply('get-monthly-debts-reply', []);
+        }
+      });
+
       createWindow();
 
       app.on('activate', function () {
