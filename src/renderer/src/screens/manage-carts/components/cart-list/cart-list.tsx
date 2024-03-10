@@ -17,15 +17,18 @@ import { ButtonsWrapper, Empty, EmptyWrapper } from './cart-list.styles';
 
 type Props = {
   data: ListCart[];
-  onPressDelete: (cartId: string) => void;
+  onPressDelete: (cartId: string, document: string) => void;
   onChangeSwitch: (cartId: string, document: string, value: boolean) => void;
   onPressCalendar: (cartId: string) => void;
+  onPressPrint: (cartCode: string) => void;
 };
 
 export const CartList = ({
   data,
   onChangeSwitch,
   onPressCalendar,
+  onPressDelete,
+  onPressPrint,
 }: Props): React.ReactElement => {
   function renderItems(): React.ReactElement[] | React.ReactElement {
     return data.map((cart, index) => {
@@ -39,13 +42,13 @@ export const CartList = ({
             <Button onClick={() => onPressCalendar(cart.id)}>
               <CalendarMonth color='success' />
             </Button>
-            <Button>
+            <Button onClick={() => onPressPrint(cart.cartCode)}>
               <Print />
             </Button>
             <Button>
               <EditRounded />
             </Button>
-            <Button>
+            <Button onClick={() => onPressDelete(cart.id, cart.personDocument)}>
               <DeleteForever color='error' />
             </Button>
             <Switch

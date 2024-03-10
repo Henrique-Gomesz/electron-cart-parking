@@ -1,5 +1,6 @@
 import { AddCircle, SearchRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { useDeleteCartByIdAction } from '@renderer/actions/delete-carts-by-id-action';
 import { useDisableCartAction } from '@renderer/actions/disable-cart-action';
 import { useEnableCartAction } from '@renderer/actions/enable-cart-action';
 import { useListCartAction } from '@renderer/actions/list-carts-action';
@@ -14,6 +15,7 @@ type UseSearchCart = {
   renderSearch: () => ReactElement;
   carts: ListCart[];
   cartSwitch: (cartId: string, document: string, value: boolean) => void;
+  onPressDelete: (cartId: string, document: string) => void;
 };
 
 type Props = {
@@ -23,7 +25,7 @@ type Props = {
 export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
   const [document, setDocument] = useState<string>('');
   const { carts, getCartsAction } = useListCartAction();
-
+  const { deleteCartAction } = useDeleteCartByIdAction();
   const { enableCart: enableCartAction } = useEnableCartAction();
   const { disableCart } = useDisableCartAction();
 
@@ -47,6 +49,11 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     } else {
       disableCart(cartId);
     }
+    getCartsAction(document);
+  }
+
+  function onPressDelete(cartId: string, document: string): void {
+    deleteCartAction(cartId);
     getCartsAction(document);
   }
 
@@ -81,5 +88,6 @@ export const useSearchCart = ({ onPressNew }: Props): UseSearchCart => {
     renderSearch,
     carts,
     cartSwitch,
+    onPressDelete,
   };
 };

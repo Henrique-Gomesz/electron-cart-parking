@@ -1,4 +1,5 @@
 import { NavbarButtons } from '@renderer/components/nav-bar/nav-bar';
+import { ListCartMonthlyDebts } from '@renderer/screens/list-cart-monthly-debts/list-cart-monthly-debts';
 import { ManageCarts } from '@renderer/screens/manage-carts/manage-carts';
 import { PersonFormScreen } from '@renderer/screens/person-form-screen/person-form-screen';
 import { ReactElement, useState } from 'react';
@@ -6,6 +7,7 @@ import { ReactElement, useState } from 'react';
 export enum Screens {
   CadastrarUsuarios = 'Cadastrar Usuários',
   GerenciarCarrinhos = 'Gerenciar Carrinhos',
+  ListarPendenciasDoCarrinho = 'Ver dívidas do Carrinho',
 }
 
 type UseNavigation = {
@@ -25,6 +27,10 @@ export const useNavigation = (): UseNavigation => {
       Screens.GerenciarCarrinhos,
       <ManageCarts key={Screens.GerenciarCarrinhos} />,
     ],
+    [
+      Screens.ListarPendenciasDoCarrinho,
+      <ListCartMonthlyDebts key={Screens.ListarPendenciasDoCarrinho} />,
+    ],
   ]);
 
   const onMenuItemPress = (pressedButton: NavbarButtons): void => {
@@ -34,6 +40,9 @@ export const useNavigation = (): UseNavigation => {
         break;
       case NavbarButtons.GerenciarCarrinhos:
         setScreen(Screens.GerenciarCarrinhos);
+        break;
+      case NavbarButtons.ListarPendenciasDoCarrinho:
+        setScreen(Screens.ListarPendenciasDoCarrinho);
         break;
     }
   };

@@ -10,6 +10,7 @@ import {
 export enum NavbarButtons {
   CadastrarUsuarios = 'Cadastrar Usuários',
   GerenciarCarrinhos = 'Gerenciar Carrinhos',
+  ListarPendenciasDoCarrinho = 'Listar Pendencias do Carrinho',
 }
 
 type NavbarProps = {
@@ -27,6 +28,10 @@ export const NavBar = ({ onPress }: NavbarProps): ReactElement => {
     {
       name: NavbarButtons.GerenciarCarrinhos,
       onClick: () => onButtonPress(NavbarButtons.GerenciarCarrinhos),
+    },
+    {
+      name: NavbarButtons.ListarPendenciasDoCarrinho,
+      onClick: () => onButtonPress(NavbarButtons.ListarPendenciasDoCarrinho),
     },
   ];
 

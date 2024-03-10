@@ -3,16 +3,17 @@ import { Screens } from '@renderer/hooks/use-navigation-hook';
 import { useSearchCart } from '@renderer/hooks/use-search-cart-hook';
 import { ReactElement, useState } from 'react';
 import { CartList } from './components/cart-list/cart-list';
+import { CartMonthlyDebts } from './components/cart-monthly-debts/cart-monthly-debts';
 import { CreateCart } from './components/create-cart/create-cart';
 import { Wrapper } from './manage-carts.styles';
-import { CartMonthlyDebts } from './components/cart-monthly-debts/cart-monthly-debts';
 
 export const ManageCarts = (): ReactElement => {
   const [cartId, setCartId] = useState<string>('');
 
-  const { renderSearch, carts, cartSwitch } = useSearchCart({
+  const { renderSearch, carts, cartSwitch, onPressDelete } = useSearchCart({
     onPressNew: showCreateCartForm,
   });
+
   const [showCreateCart, setShowCreateCart] = useState<boolean>(false);
 
   const [showCartMonthlyDebts, setShowCartMonthlyDebts] = useState(false);
@@ -34,6 +35,11 @@ export const ManageCarts = (): ReactElement => {
     setShowCartMonthlyDebts(false);
   }
 
+  async function generateBarcode(cartCode: string): Promise<void> {
+    console.log(cartCode);
+    window.electron.ipcRenderer.send('generate-barcode', cartCode);
+  }
+
   function renderContent(): ReactElement {
     if (showCartMonthlyDebts) {
       return (
@@ -48,9 +54,10 @@ export const ManageCarts = (): ReactElement => {
       <>
         {renderSearch()}
         <CartList
+          onPressPrint={async (cartCode) => await generateBarcode(cartCode)}
           onPressCalendar={onPressCalendar}
           onChangeSwitch={cartSwitch}
-          onPressDelete={() => {}}
+          onPressDelete={onPressDelete}
           data={carts}
         />
       </>

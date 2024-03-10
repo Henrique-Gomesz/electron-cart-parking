@@ -10,6 +10,8 @@ import { PersonRepository } from './db/repositories/person-repository';
 import { Cart, CartModel } from './db/schemas/cart-schema';
 import { MonthlyDebtsModel } from './db/schemas/monthly-debts-schema';
 import { Person, PersonModel } from './db/schemas/person-schema';
+import bwipjs from 'bwip-js';
+import { writeFile } from 'fs';
 
 const monthlyDebtsRepository = new MonthlyDebtsRepository(MonthlyDebtsModel);
 const cartRepository = new CartRepository(CartModel);
@@ -50,7 +52,7 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   mongoose
     .connect('mongodb://127.0.0.1:27017/cart-park')
@@ -76,6 +78,10 @@ app.whenReady().then(() => {
 
       ipcMain.on('create-cart', async (event, cart: Cart) => {
         try {
+          const cartQuantity = await cartRepository.getGetQuantity();
+
+          cart.cartCode = `CARRINHO-${cartQuantity + 1}`;
+
           const person = await personRepository.findByDocument(
             cart.personDocument,
           );
@@ -101,6 +107,8 @@ app.whenReady().then(() => {
             carts.map((cart) => ({
               id: cart.id,
               personDocument: cart.personDocument,
+              deleted: cart.deleted,
+              cartCode: cart.cartCode,
               name: cart.name,
               active: cart.active,
               createdAt: cart.createdAt,
@@ -188,6 +196,90 @@ app.whenReady().then(() => {
         } catch (error) {
           event.reply('get-monthly-debts-reply', []);
         }
+      });
+
+      ipcMain.on('get-cart', async (event, cartCode: string) => {
+        try {
+          const cart = await cartRepository.findByCode(cartCode);
+
+          if (isNil(cart)) return event.reply('get-cart-reply', false);
+
+          return event.reply('get-cart-reply', {
+            id: cart.id,
+            personDocument: cart.personDocument,
+            deleted: cart.deleted,
+            cartCode: cart.cartCode,
+            name: cart.name,
+            active: cart.active,
+            createdAt: cart.createdAt,
+            updatedAt: cart.updatedAt,
+          });
+        } catch (error) {
+          event.reply('get-cart-reply', false);
+        }
+      });
+
+      ipcMain.on('delete-cart', async (event, cartId: string) => {
+        try {
+          const debtsList = await monthlyDebtsRepository.findByCartId(cartId);
+
+          if (isEmpty(debtsList))
+            return event.reply('delete-cart-reply', false);
+
+          const monthsInDebt = debtsList.filter((debt) =>
+            isNil(debt.paymentDate),
+          );
+
+          if (isEmpty(monthsInDebt)) {
+            await cartRepository.deleteCart(cartId);
+            return event.reply('delete-cart-reply', true);
+          }
+          return event.reply('delete-cart-reply', false);
+        } catch (error) {
+          console.log(error);
+          event.reply('delete-cart-reply', false);
+        }
+      });
+
+      ipcMain.on('generate-barcode', async (event, cartCode: string) => {
+        bwipjs.toBuffer(
+          {
+            bcid: 'code128', // Barcode type
+            text: cartCode, // Text to encode
+            scale: 3, // 3x scaling factor
+            height: 10, // Bar height, in millimeters
+            includetext: true, // Show human-readable text
+            textxalign: 'center', // Always good to set this
+          },
+          function (err, png) {
+            if (err) {
+              // `err` may be a string or Error object
+            } else {
+              writeFile('./barcode/out.png', png, (err) => {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+                const win = new BrowserWindow();
+                win.loadFile('./barcode/out.png');
+
+                const options = {
+                  silent: false,
+                  deviceName: 'My-Printer',
+                  pageRanges: [
+                    {
+                      from: 0,
+                      to: 1,
+                    },
+                  ],
+                };
+                win.webContents.print(options, (success, errorType) => {
+                  if (!success) console.log(errorType);
+                });
+              });
+            }
+          },
+        );
       });
 
       createWindow();

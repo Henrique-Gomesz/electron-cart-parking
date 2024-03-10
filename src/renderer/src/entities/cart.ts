@@ -8,6 +8,8 @@ export interface ListCart {
   personDocument: string;
   name: string;
   active: boolean;
+  deleted: boolean;
+  cartCode: string;
   createdAt: Date;
   updatedAt: Date;
 }

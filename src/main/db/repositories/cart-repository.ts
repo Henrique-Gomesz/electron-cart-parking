@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, UpdateWriteOpResult } from 'mongoose';
 import { Cart } from '../schemas/cart-schema';
 
 export class CartRepository {
@@ -16,8 +16,21 @@ export class CartRepository {
     return this.model.findById(id).exec();
   }
 
+  public async findByCode(cartCode: string): Promise<Cart | null> {
+    return this.model.findOne({ cartCode: cartCode }).exec();
+  }
+  public async getGetQuantity(): Promise<number> {
+    return await this.model.countDocuments().exec();
+  }
+
+  public async deleteCart(cartId: string): Promise<UpdateWriteOpResult> {
+    return await this.model
+      .updateOne({ _id: cartId, active: false }, { deleted: true })
+      .exec();
+  }
+
   public async findByUserDocument(personDocument: string): Promise<Cart[]> {
-    return await this.model.find({ personDocument }).exec();
+    return await this.model.find({ personDocument, deleted: false }).exec();
   }
 
   public async enable(id: string): Promise<Cart | null> {

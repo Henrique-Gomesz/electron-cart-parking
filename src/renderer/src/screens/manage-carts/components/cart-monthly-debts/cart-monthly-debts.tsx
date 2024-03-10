@@ -70,7 +70,7 @@ export const CartMonthlyDebts = ({
         rows={debts}
         columns={columns}
         initialState={{
-          sorting:{
+          sorting: {
             sortModel: [{ field: 'createdAt', sort: 'desc' }],
           },
           pagination: {
