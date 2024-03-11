@@ -1,0 +1,8 @@
+.paidRow {
+    background-color: rgb(133, 209, 133); /* Cor para linhas pagas */
+  }
+  
+  .unpaidRow {
+    background-color: rgb(248, 147, 147); /* Cor para linhas não pagas */
+  }
+  

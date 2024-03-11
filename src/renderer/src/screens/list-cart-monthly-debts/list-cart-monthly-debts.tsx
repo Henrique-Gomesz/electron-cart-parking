@@ -7,13 +7,19 @@ import { BaseScreen } from '@renderer/components/base-screen/base-screen';
 import { Screens } from '@renderer/hooks/use-navigation-hook';
 import { useSearchCartDebts } from '@renderer/hooks/use-search-cart-debts-hook';
 import { isNil } from 'lodash';
+import './list-cart-monthly-devts.css';
 import * as React from 'react';
 import {
   ButtonsWrapper,
+  CartInfoWrapper,
   ContentWrapper,
+  PersonInfoWrapper,
   TableWrapper,
 } from './list-cart-monthly-debts.styles';
 import { useGetCartByCodeAction } from '@renderer/actions/get-carts-by-id-action';
+import { CartInfo } from '@renderer/components/cart-info/cart-info';
+import { useGetPersonByDocument } from '@renderer/actions/get-person-action';
+import { PersonInfo } from '@renderer/components/person-info/person-info';
 
 const columns: GridColDef[] = [
   {
@@ -21,6 +27,10 @@ const columns: GridColDef[] = [
     headerName: 'Pago',
     width: 200,
     type: 'boolean',
+    cellClassName: (params): string => {
+      if (params.value) return 'paidRow';
+      return 'unpaidRow';
+    },
     valueGetter: (params): boolean => {
       if (isNil(params.row.paymentDate)) return false;
       return true;
@@ -57,6 +67,7 @@ export const ListCartMonthlyDebts = ({ cartId }: Props): React.ReactElement => {
   const { debts, getMonthlyDebts } = useGetMonthlyDebtsAction();
   const { cart, getCartAction } = useGetCartByCodeAction();
   const { payMonthlyDebts } = usePayMonthlyDebtsAction();
+  const { getPersonById, person } = useGetPersonByDocument();
   const { renderSearch, cartNumber } = useSearchCartDebts({
     onSearchCarts: onSearchCartDebts,
   });
@@ -74,16 +85,28 @@ export const ListCartMonthlyDebts = ({ cartId }: Props): React.ReactElement => {
 
   React.useEffect(() => {
     getMonthlyDebts(cart.id);
+    getPersonById(cart.personDocument);
   }, [cart]);
 
   return (
     <BaseScreen title={Screens.ListarPendenciasDoCarrinho}>
       <ContentWrapper>
         {renderSearch()}
+        <CartInfoWrapper>
+          <CartInfo cart={cart} />
+        </CartInfoWrapper>
+        <PersonInfoWrapper>
+          <PersonInfo person={person} />
+        </PersonInfoWrapper>
         <TableWrapper>
           <DataGrid
             rows={debts}
             columns={columns}
+            getRowClassName={(params) => {
+              console.log(params);
+              if (params.row.paymentDate) return 'paidRow';
+              return 'unpaidRow';
+            }}
             initialState={{
               sorting: {
                 sortModel: [{ field: 'createdAt', sort: 'desc' }],

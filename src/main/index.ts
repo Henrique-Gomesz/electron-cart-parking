@@ -282,6 +282,24 @@ app.whenReady().then(async () => {
         );
       });
 
+      ipcMain.on('get-person-by-document', async (event, document: string) => {
+        try {
+          const person = await personRepository.findByDocument(document);
+
+          if (isNil(person))
+            return event.reply('get-person-by-document-reply', undefined);
+
+          event.reply('get-person-by-document-reply', {
+            id: person.id,
+            name: person.name,
+            document: person.document,
+            telephone: person.telephone,
+          });
+        } catch (error) {
+          event.reply('get-person-by-document-reply', undefined);
+        }
+      });
+
       createWindow();
 
       app.on('activate', function () {

@@ -1,9 +1,4 @@
-import {
-  CalendarMonth,
-  DeleteForever,
-  EditRounded,
-  Print,
-} from '@mui/icons-material';
+import { CalendarMonth, DeleteForever, Print } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -37,16 +32,15 @@ export const CartList = ({
           <ListItemText
             primaryTypographyProps={{ color: 'black' }}
             primary={cart.name}
+            secondary={`Código: ${cart.cartCode}`}
           />
+
           <ButtonsWrapper>
             <Button onClick={() => onPressCalendar(cart.id)}>
               <CalendarMonth color='success' />
             </Button>
             <Button onClick={() => onPressPrint(cart.cartCode)}>
               <Print />
-            </Button>
-            <Button>
-              <EditRounded />
             </Button>
             <Button onClick={() => onPressDelete(cart.id, cart.personDocument)}>
               <DeleteForever color='error' />
